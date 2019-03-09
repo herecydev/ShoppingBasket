@@ -7,11 +7,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7A9BB295-107
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingBasket", "src\ShoppingBasket\ShoppingBasket.csproj", "{14095EA3-A3B7-4E9C-865A-7D06CC1EAA08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingBasket.Services", "src\ShoppingBasket.Services\ShoppingBasket.Services.csproj", "{A11E1D27-C985-45C1-838E-F1ED4F643E57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingBasket.Services", "src\ShoppingBasket.Services\ShoppingBasket.Services.csproj", "{A11E1D27-C985-45C1-838E-F1ED4F643E57}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F607BF7C-9CF3-4E8F-A307-4C915B561909}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingBasket.Services.Tests", "tests\ShoppingBasket.Services.Tests\ShoppingBasket.Services.Tests.csproj", "{0E188ABD-BCFC-46C3-A271-7B676CAE97AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingBasket.Services.Tests", "tests\ShoppingBasket.Services.Tests\ShoppingBasket.Services.Tests.csproj", "{0E188ABD-BCFC-46C3-A271-7B676CAE97AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingBasket.Tests", "tests\ShoppingBasket.Tests\ShoppingBasket.Tests.csproj", "{A545A30A-34D5-450B-94EC-A9A22CF26F2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,10 @@ Global
 		{0E188ABD-BCFC-46C3-A271-7B676CAE97AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E188ABD-BCFC-46C3-A271-7B676CAE97AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E188ABD-BCFC-46C3-A271-7B676CAE97AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A545A30A-34D5-450B-94EC-A9A22CF26F2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A545A30A-34D5-450B-94EC-A9A22CF26F2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A545A30A-34D5-450B-94EC-A9A22CF26F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A545A30A-34D5-450B-94EC-A9A22CF26F2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +45,7 @@ Global
 		{14095EA3-A3B7-4E9C-865A-7D06CC1EAA08} = {7A9BB295-1071-44F4-9172-F3627B9E6FB8}
 		{A11E1D27-C985-45C1-838E-F1ED4F643E57} = {7A9BB295-1071-44F4-9172-F3627B9E6FB8}
 		{0E188ABD-BCFC-46C3-A271-7B676CAE97AF} = {F607BF7C-9CF3-4E8F-A307-4C915B561909}
+		{A545A30A-34D5-450B-94EC-A9A22CF26F2F} = {F607BF7C-9CF3-4E8F-A307-4C915B561909}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E026F082-EB08-45D1-96C9-2E90235E0DBB}
