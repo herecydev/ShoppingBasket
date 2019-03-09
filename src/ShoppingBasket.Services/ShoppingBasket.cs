@@ -1,20 +1,19 @@
-﻿namespace ShoppingBasket.Services
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace ShoppingBasket.Services
 {
     public class ShoppingBasket : IShoppingBasket
     {
+        private Dictionary<string, ShoppingBasketItem> _items = new Dictionary<string, ShoppingBasketItem>();
+
         public void Add(ShoppingBasketItem shoppingBasketItem)
-        {
-            throw new System.NotImplementedException();
-        }
+            => _items.Add(shoppingBasketItem.Id, shoppingBasketItem);
 
         public void Remove(ShoppingBasketItem shoppingBasketItem)
-        {
-            throw new System.NotImplementedException();
-        }
+            => _items.Remove(shoppingBasketItem.Id);
 
         public decimal Total()
-        {
-            throw new System.NotImplementedException();
-        }
+            => _items.Values.Sum(item => item.Value);
     }
 }
