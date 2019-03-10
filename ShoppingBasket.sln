@@ -13,7 +13,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F607BF7C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingBasket.Services.Tests", "tests\ShoppingBasket.Services.Tests\ShoppingBasket.Services.Tests.csproj", "{0E188ABD-BCFC-46C3-A271-7B676CAE97AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingBasket.Tests", "tests\ShoppingBasket.Tests\ShoppingBasket.Tests.csproj", "{A545A30A-34D5-450B-94EC-A9A22CF26F2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingBasket.Tests", "tests\ShoppingBasket.Tests\ShoppingBasket.Tests.csproj", "{A545A30A-34D5-450B-94EC-A9A22CF26F2F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6CEDC4E6-63D0-4BD7-BBF9-F3D9A0600E92}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

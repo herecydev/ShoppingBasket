@@ -16,7 +16,7 @@ In most cases async is used correctly and appropriately, however in some places 
 
 The ShoppingBasket acts similar to an event aggregrate you would find in an event-based system, that is it's immutable so removals are appended instead of mutating the chain of events.
 
-This is definitely a step away from a typical relational database approach where you see an atomic snapshot
+This is definitely a step away from a typical relational database approach
 
 ### Concurrency
 
