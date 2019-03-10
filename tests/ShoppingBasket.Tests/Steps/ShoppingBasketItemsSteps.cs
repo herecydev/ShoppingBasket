@@ -91,7 +91,7 @@ namespace ShoppingBasket.Tests.Steps
         public void ThenTheBasketShouldHaveMessage(string message)
         {
             var shoppingBasketResult = _scenarioContext.Get<ShoppingBasketResult>("BasketResult");
-            var messages = shoppingBasketResult.ItemResults.Select(x => x.Message);
+            var messages = shoppingBasketResult.ItemRejections.Select(x => x.Message);
             messages.Should().Contain(message);
         }
     }

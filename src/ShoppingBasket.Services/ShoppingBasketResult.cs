@@ -4,7 +4,7 @@ namespace ShoppingBasket.Services
 {
     public class ShoppingBasketResult
     {
-        public List<ItemResult> ItemResults { get; set; } = new List<ItemResult>();
+        public List<ItemRejection> ItemRejections { get; set; } = new List<ItemRejection>();
         public decimal Total { get; set; }
     };
 }

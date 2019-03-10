@@ -137,17 +137,17 @@ namespace ShoppingBasket.Tests.Features
             table3.AddRow(new string[] {
                         "000-002",
                         "5.00",
-                        "50",
+                        "50.00",
                         "Headgear"});
             table3.AddRow(new string[] {
                         "000-003",
                         "5.00",
-                        "5",
+                        "5.00",
                         "Headgear"});
             table3.AddRow(new string[] {
                         "000-004",
                         "5.00",
-                        "50",
+                        "50.00",
                         ""});
 #line 15
  testRunner.And("the following offer vouchers:", ((string)(null)), table3, "And ");

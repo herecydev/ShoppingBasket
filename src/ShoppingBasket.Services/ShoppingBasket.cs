@@ -67,7 +67,7 @@ namespace ShoppingBasket.Services
             var discountableSubTotal = discountableCosts.Sum(x => x.Value);
             var discount = 0M;
             var offerVoucherCount = 0;
-            var itemResults = new List<ItemResult>();
+            var itemRejections = new List<ItemRejection>();
 
             // Roll through all the resulting vouchers
             foreach (var voucher in GetVouchers())
@@ -82,10 +82,9 @@ namespace ShoppingBasket.Services
                     // We're not allowing more than one offer voucher
                     if (offerVoucherCount > 1)
                     {
-                        itemResults.Add(new ItemResult
+                        itemRejections.Add(new ItemRejection
                         {
                             Id = voucher.Id,
-                            ItemResultAction = ItemResultAction.RejectItem,
                             Message = "Another offer voucher has already been applied."
                         });
                     }
@@ -108,10 +107,9 @@ namespace ShoppingBasket.Services
                                 }
                                 else
                                 {
-                                    itemResults.Add(new ItemResult
+                                    itemRejections.Add(new ItemRejection
                                     {
                                         Id = voucher.Id,
-                                        ItemResultAction = ItemResultAction.RejectItem,
                                         Message = $"There are no products in your basket applicable to voucher {voucher.Id}."
                                     });
                                 }
@@ -119,11 +117,10 @@ namespace ShoppingBasket.Services
                         }
                         else
                         {
-                            itemResults.Add(new ItemResult
+                            itemRejections.Add(new ItemRejection
                             {
                                 Id = voucher.Id,
-                                ItemResultAction = ItemResultAction.RejectItem,
-                                Message = $"You have not reached the spend threshold for voucher {voucher.Id}. Spend another £{offerVoucher.Threshold - discountableSubTotal + 0.01M} to receive £{offerVoucher.Value} discount from your basket total."
+                                Message = $"You have not reached the spend threshold for voucher {voucher.Id}. Spend another £{(offerVoucher.Threshold - discountableSubTotal + 0.01M).RoundTo2DP()} to receive £{offerVoucher.Value.RoundTo2DP()} discount from your basket total."
                             });
                         }
                     }
@@ -134,7 +131,7 @@ namespace ShoppingBasket.Services
             return new ShoppingBasketResult
             {
                 Total = total,
-                ItemResults = itemResults
+                ItemRejections = itemRejections
             };
         }
 
