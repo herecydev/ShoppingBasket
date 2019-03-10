@@ -2,7 +2,6 @@
 {
     public enum ItemResultAction
     {
-        Success,
         RejectItem
     }
 }

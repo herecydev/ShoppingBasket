@@ -75,7 +75,7 @@ namespace ShoppingBasket.Services.Tests
         public void WhenCallingTotalThenItemsAreSummed(List<ShoppingBasketOperation> basketOperations, decimal sum)
         {
             ApplyBasketOperations(basketOperations);
-            _shoppingBasket.Total().Should().Be(sum);
+            _shoppingBasket.Total().Total.Should().Be(sum);
         }
 
 
@@ -83,14 +83,16 @@ namespace ShoppingBasket.Services.Tests
             => new ProductItem
             {
                 Id = id,
-                Value = value
+                Value = value,
+                IsDiscountable = true,
+                ProductType = "Jeans"
             };
 
         private static ShoppingBasketOperation CreateBasketOperation(string id, decimal value, ShoppingBasketOperationType basketOperationType)
             => new ShoppingBasketOperation
             {
                 ShoppingBasketItem = CreateProductItem(id, value),
-                ShoppingBasketOperationType = basketOperationType
+                ShoppingBasketOperationType = basketOperationType,
             };
 
         private void ApplyBasketOperations(List<ShoppingBasketOperation> basketOperations)

@@ -28,15 +28,15 @@ namespace ShoppingBasket.Controllers
             => _shoppingBasketProvider.DeleteShoppingBasketAsync(basketId);
 
         [HttpPost("{basketId}/{itemId}")]
-        public Task<ItemResult> AddItem(string basketId, string itemId)
+        public Task AddItem(string basketId, string itemId)
             => _itemService.AddShoppingBasketItemAsync(basketId, itemId);
 
         [HttpDelete("{basketId}/{itemId}")]
-        public Task<ItemResult> RemoveItem(string basketId, string itemId)
+        public Task RemoveItem(string basketId, string itemId)
             => _itemService.RemoveShoppingBasketItemAsync(basketId, itemId);
 
         [HttpGet("{basketId}")]
-        public Task<decimal> GetTotal(string basketId)
+        public Task<ShoppingBasketResult> GetTotal(string basketId)
             => _itemService.GetTotal(basketId);
     }
 }

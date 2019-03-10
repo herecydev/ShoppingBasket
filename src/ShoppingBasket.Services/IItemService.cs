@@ -5,8 +5,8 @@ namespace ShoppingBasket.Services
     // TODO hate this name
     public interface IItemService
     {
-        Task<ItemResult> AddShoppingBasketItemAsync(string basketId, string itemId);
-        Task<ItemResult> RemoveShoppingBasketItemAsync(string basketId, string itemId);
-        Task<decimal> GetTotal(string basketId);
+        Task AddShoppingBasketItemAsync(string basketId, string itemId);
+        Task RemoveShoppingBasketItemAsync(string basketId, string itemId);
+        Task<ShoppingBasketResult> GetTotal(string basketId);
     }
 }

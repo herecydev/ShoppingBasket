@@ -1,4 +1,7 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ShoppingBasket.Services
 {
@@ -7,7 +10,7 @@ namespace ShoppingBasket.Services
     {
         private ConcurrentBag<ShoppingBasketOperation> _shoppingBasketItems = new ConcurrentBag<ShoppingBasketOperation>();
 
-        public ItemResult Add(Item shoppingBasketItem)
+        public void Add(Item shoppingBasketItem)
         {
             /* There's definitely some potential for race conditions that aren't being covered. We have a few options that depend on architecture
                but most databases will cover the optimistic locking well
@@ -17,45 +20,110 @@ namespace ShoppingBasket.Services
                 ShoppingBasketItem = shoppingBasketItem,
                 ShoppingBasketOperationType = ShoppingBasketOperationType.Add
             });
-
-            return new ItemResult
-            {
-                ItemResultAction = ItemResultAction.Success
-            };
         }
 
-        public ItemResult Remove(Item shoppingBasketItem)
+        public void Remove(Item shoppingBasketItem)
         {
             _shoppingBasketItems.Add(new ShoppingBasketOperation
             {
                 ShoppingBasketItem = shoppingBasketItem,
                 ShoppingBasketOperationType = ShoppingBasketOperationType.Remove
             });
+        }
 
-            return new ItemResult
+        public ShoppingBasketResult Total()
+        {
+            var categoryCosts = new Dictionary<string, decimal>();
+
+            // Calculate the subtotal of the standard product items first
+            foreach (var item in _shoppingBasketItems.Where(x => x.ShoppingBasketItem is ProductItem))
             {
-                ItemResultAction = ItemResultAction.Success
+                var productItem = item.ShoppingBasketItem as ProductItem;
+                if (item.ShoppingBasketOperationType == ShoppingBasketOperationType.Add)
+                {
+                    categoryCosts.TryGetValue(productItem.ProductType, out var categoryCost);
+                    categoryCost += item.ShoppingBasketItem.Value;
+                    categoryCosts[productItem.ProductType] = categoryCost;
+                }
+                else if (item.ShoppingBasketOperationType == ShoppingBasketOperationType.Remove)
+                {
+                    categoryCosts.TryGetValue(productItem.ProductType, out var categoryCost);
+                    categoryCost -= item.ShoppingBasketItem.Value;
+                    categoryCosts[productItem.ProductType] = categoryCost;
+                }
+            }
+
+            var subTotal = categoryCosts.Sum(x => x.Value);
+            var discount = 0M;
+            var offerVoucherCount = 0;
+            var itemResults = new List<ItemResult>();
+
+            // Roll through all the resulting vouchers
+            foreach (var voucher in GetVouchers())
+            {
+                if (voucher is GiftVoucher)
+                {
+                    discount += voucher.Value;
+                }
+                else if (voucher is OfferVoucher offerVoucher)
+                {
+                    offerVoucherCount += 1;
+                    // We're not allowing more than one offer voucher
+                    if (offerVoucherCount > 1)
+                    {
+                        itemResults.Add(new ItemResult
+                        {
+                            Item = voucher,
+                            ItemResultAction = ItemResultAction.RejectItem,
+                            Message = "Another offer voucher has already been applied"
+                        });
+                    }
+                    else
+                    {
+                        var matchingCategory = categoryCosts.TryGetValue(offerVoucher.ProductType, out var categoryCost);
+                        if (offerVoucher.Theshold >= categoryCost)
+                        {
+                            discount += Math.Min(offerVoucher.Value, categoryCost);
+                        }
+                        else
+                        {
+                            itemResults.Add(new ItemResult
+                            {
+                                Item = voucher,
+                                ItemResultAction = ItemResultAction.RejectItem,
+                                Message = $"There are no products in your basket applicable to voucher {voucher.Id}"
+                            });
+                        }
+                    }
+                }
+            }
+            var total = Math.Max(subTotal - discount, 0);
+
+            return new ShoppingBasketResult
+            {
+                Total = total
             };
         }
 
-        public decimal Total()
+        private List<Voucher> GetVouchers()
         {
-            var total = 0M;
-            foreach (var item in _shoppingBasketItems)
+            var vouchers = new List<Voucher>();
+            foreach (var item in _shoppingBasketItems.Where(x => x.ShoppingBasketItem is Voucher))
             {
-                if (item.ShoppingBasketItem is ProductItem)
+                var voucher = item.ShoppingBasketItem as Voucher;
+                if (item.ShoppingBasketOperationType == ShoppingBasketOperationType.Add)
                 {
-                    if (item.ShoppingBasketOperationType == ShoppingBasketOperationType.Add)
-                        total += item.ShoppingBasketItem.Value;
-                    else if (item.ShoppingBasketOperationType == ShoppingBasketOperationType.Remove)
-                        total -= item.ShoppingBasketItem.Value;
+                    vouchers.Add(voucher);
                 }
-                else if (item.ShoppingBasketItem is GiftVoucher)
+                else if (item.ShoppingBasketOperationType == ShoppingBasketOperationType.Remove)
                 {
-                    total -= item.ShoppingBasketItem.Value;
+                    var matchingVoucher = vouchers.First(x => x.Id == item.ShoppingBasketItem.Id);
+                    if (matchingVoucher != null)
+                        vouchers.Remove(matchingVoucher);
                 }
             }
-            return total;
+
+            return vouchers;
         }
     }
 }

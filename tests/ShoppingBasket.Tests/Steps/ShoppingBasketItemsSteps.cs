@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using ShoppingBasket.Services;
+using System.Linq;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
@@ -40,12 +41,26 @@ namespace ShoppingBasket.Tests.Steps
             }
         }
 
-        [When(@"(.*) is applied")]
-        public async Task WhenIsApplied(string id)
+        [Given(@"the following offer vouchers:")]
+        public async Task GivenTheFollowingOfferVouchers(Table table)
+        {
+            var offerVouchers = table.CreateSet<OfferVoucher>();
+
+            foreach (var offerVoucher in offerVouchers)
+            {
+                await PostJson("/api/items/offervoucher", offerVoucher);
+            }
+        }
+
+
+        [When(@"(.*) are applied")]
+        public async Task WhenAreApplied(string ids)
         {
             var basket = GetBasketId();
-            var response = await PostJson($"/api/basket/{basket}/{id}");
-            _scenarioContext.Set(response, "Response");
+            foreach (var id in ids.Split(","))
+            {
+                var response = await PostJson($"/api/basket/{basket}/{id.Trim()}");
+            }
         }
 
         [Given(@"(.*) have been added to the basket")]
@@ -58,13 +73,6 @@ namespace ShoppingBasket.Tests.Steps
             }
         }
 
-        [Then(@"it should return successfully")]
-        public async Task ThenItShouldReturnSuccessfully()
-        {
-            var itemResult = await GetItemResult();
-            itemResult.ItemResultAction.Should().Be(ItemResultAction.Success);
-        }
-
         [Then(@"the total should be (.*)")]
         public async Task ThenTheTotalShouldBe(decimal total)
         {
@@ -72,8 +80,17 @@ namespace ShoppingBasket.Tests.Steps
             var response = await ApiClient.GetAsync($"/api/basket/{basket}");
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadAsStringAsync();
-            var actualTotal = JsonConvert.DeserializeObject<decimal>(result);
-            actualTotal.Should().Be(total);
+            var shoppingBasketResult = JsonConvert.DeserializeObject<ShoppingBasketResult>(result);
+            shoppingBasketResult.Total.Should().Be(total);
+            _scenarioContext.Set(shoppingBasketResult, "BasketResult");
+        }
+
+        [Then(@"the basket should have message '(.*)'")]
+        public void ThenTheBasketShouldHaveMessage(string message)
+        {
+            var shoppingBasketResult = _scenarioContext.Get<ShoppingBasketResult>("BasketResult");
+            var messages = shoppingBasketResult.ItemResults.Select(x => x.Message);
+            message.Should().Contain(message);
         }
     }
 }

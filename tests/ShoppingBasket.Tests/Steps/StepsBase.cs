@@ -53,14 +53,14 @@ namespace ShoppingBasket.Tests.Steps
             return value;
         }
 
-        public async Task<ItemResult> GetItemResult()
+        public async Task<ShoppingBasketResult> GetItemResult()
         {
             if (!_scenarioContext.TryGetValue("Response", out HttpResponseMessage value))
                 throw new KeyNotFoundException("Response could not be found, was anything added?");
 
             value.EnsureSuccessStatusCode();
             var result = await value.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<ItemResult>(result);
+            return JsonConvert.DeserializeObject<ShoppingBasketResult>(result);
         }
     }
 }

@@ -78,31 +78,45 @@ namespace ShoppingBasket.Tests.Features
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "Id",
                         "Value",
-                        "Description"});
+                        "Description",
+                        "ProductType",
+                        "IsDiscountable"});
             table1.AddRow(new string[] {
                         "1",
                         "10.50",
-                        "Hat"});
+                        "Cheap Hat",
+                        "Headwear",
+                        "true"});
             table1.AddRow(new string[] {
                         "2",
                         "54.65",
-                        "Jumper"});
+                        "Awesome Jumper",
+                        "Jumper",
+                        "true"});
             table1.AddRow(new string[] {
                         "3",
                         "25.00",
-                        "Hat"});
+                        "Thermal Hat",
+                        "Headwear",
+                        "true"});
             table1.AddRow(new string[] {
                         "4",
                         "26.00",
-                        "Jumper"});
+                        "Woven Jumper",
+                        "Jumper",
+                        "true"});
             table1.AddRow(new string[] {
                         "5",
                         "3.50",
-                        "Head Light"});
+                        "Head Light",
+                        "Headgear",
+                        "true"});
             table1.AddRow(new string[] {
                         "6",
                         "30.00",
-                        "Gift Voucher"});
+                        "Gift Voucher",
+                        "GiftVoucher",
+                        "false"});
 #line 4
  testRunner.Given("the following shopping basket items:", ((string)(null)), table1, "Given ");
 #line hidden
@@ -115,6 +129,24 @@ namespace ShoppingBasket.Tests.Features
 #line 12
  testRunner.And("the following gift vouchers:", ((string)(null)), table2, "And ");
 #line hidden
+            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Id",
+                        "Value",
+                        "Threshold",
+                        "ProductType"});
+            table3.AddRow(new string[] {
+                        "000-002",
+                        "5.00",
+                        "50",
+                        "Headgear"});
+            table3.AddRow(new string[] {
+                        "000-003",
+                        "5.00",
+                        "5",
+                        "Headgear"});
+#line 15
+ testRunner.And("the following offer vouchers:", ((string)(null)), table3, "And ");
+#line hidden
         }
         
         void System.IDisposable.Dispose()
@@ -126,24 +158,49 @@ namespace ShoppingBasket.Tests.Features
         [Xunit.TraitAttribute("FeatureTitle", "ShoppingBasketItems")]
         [Xunit.TraitAttribute("Description", "Shopping Basket gift voucher")]
         [Xunit.InlineDataAttribute("1, 2", "000-001", "60.15", new string[0])]
-        public virtual void ShoppingBasketGiftVoucher(string productitems, string voucher, string total, string[] exampleTags)
+        public virtual void ShoppingBasketGiftVoucher(string productitems, string vouchers, string total, string[] exampleTags)
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Shopping Basket gift voucher", null, exampleTags);
-#line 16
+#line 20
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 3
 this.FeatureBackground();
-#line 17
- testRunner.Given("a shopping basket is created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 18
- testRunner.And(string.Format("{0} have been added to the basket", productitems), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 19
- testRunner.When(string.Format("{0} is applied", voucher), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 20
- testRunner.Then("it should return successfully", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 21
- testRunner.And(string.Format("the total should be {0}", total), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.Given("a shopping basket is created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 22
+ testRunner.And(string.Format("{0} have been added to the basket", productitems), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 23
+ testRunner.When(string.Format("{0} are applied", vouchers), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 24
+ testRunner.Then(string.Format("the total should be {0}", total), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.TheoryAttribute(DisplayName="Shopping Basket gift voucher rejections")]
+        [Xunit.TraitAttribute("FeatureTitle", "ShoppingBasketItems")]
+        [Xunit.TraitAttribute("Description", "Shopping Basket gift voucher rejections")]
+        [Xunit.InlineDataAttribute("3, 4", "000-002", "There are no products in your basket applicable to voucher 000-002.", "51.00", new string[0])]
+        [Xunit.InlineDataAttribute("3, 4", "000-002, 000-003", "Another offer voucher has already been applied.", "51.00", new string[0])]
+        public virtual void ShoppingBasketGiftVoucherRejections(string productitems, string vouchers, string message, string total, string[] exampleTags)
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Shopping Basket gift voucher rejections", null, exampleTags);
+#line 30
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
+#line 3
+this.FeatureBackground();
+#line 31
+ testRunner.Given("a shopping basket is created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 32
+ testRunner.And(string.Format("{0} have been added to the basket", productitems), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 33
+ testRunner.When(string.Format("{0} are applied", vouchers), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 34
+ testRunner.Then(string.Format("the total should be {0}", total), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 35
+ testRunner.And(string.Format("the basket should have message \'{0}\'", message), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

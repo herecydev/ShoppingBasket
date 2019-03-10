@@ -1,7 +1,7 @@
 ﻿namespace ShoppingBasket.Services
 {
-    public class GiftVoucher : Voucher
+    public abstract class Voucher : Item
     {
-        
+
     }
 }

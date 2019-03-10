@@ -26,28 +26,20 @@ namespace ShoppingBasket.Services
             await _shoppingBasketStore.RemoveAsync(id);
         }
 
-        public async Task<ItemResult> AddShoppingBasketItemAsync(string basketId, string itemId)
+        public async Task AddShoppingBasketItemAsync(string basketId, string itemId)
         {
             var basket = await _shoppingBasketStore.GetOrCreateAsync(basketId);
             var item = await _itemStore.GetItemAsync(itemId);
-
-            if (item == null)
-                return new ItemResult
-                {
-                    ItemResultAction = ItemResultAction.RejectItem,
-                    Message = "Unrecognized item"
-                };
-            var result = basket.Add(item);
+            basket.Add(item);
             await _shoppingBasketStore.UpsertAsync(basketId, basket);
-            return result;
         }
 
-        public Task<ItemResult> RemoveShoppingBasketItemAsync(string basketId, string itemId)
+        public Task RemoveShoppingBasketItemAsync(string basketId, string itemId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<decimal> GetTotal(string basketId)
+        public async Task<ShoppingBasketResult> GetTotal(string basketId)
         {
             var basket = await _shoppingBasketStore.GetOrCreateAsync(basketId);
             return basket.Total();

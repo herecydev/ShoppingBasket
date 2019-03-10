@@ -25,9 +25,9 @@ namespace ShoppingBasket.Controllers
         public Task AddGiftVoucher([FromBody]GiftVoucher item) =>
             _itemStore.AddItemAsync(item);
 
-        [HttpDelete("{id}")]
+        [HttpPost("offervoucher")]
         [ProducesResponseType(204)]
-        public Task DeleteBasket(string id)
-            => _itemStore.RemoveItemAsync(id);
+        public Task AddOfferVoucher([FromBody]OfferVoucher item) =>
+            _itemStore.AddItemAsync(item);
     }
 }
