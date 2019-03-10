@@ -16,6 +16,7 @@ Background:
 	| Id      | Value | Threshold | ProductType |
 	| 000-002 | 5.00  | 50        | Headgear    |
 	| 000-003 | 5.00  | 5         | Headgear    |
+	| 000-004 | 5.00  | 50        |             |
 
 Scenario Outline: Shopping Basket gift voucher
 	Given a shopping basket is created
@@ -24,9 +25,10 @@ Scenario Outline: Shopping Basket gift voucher
 	Then the total should be <total>
 
 	Examples: 
-	| productitems | vouchers | total |
-	| 1, 2         | 000-001  | 60.15 |
-	| 3, 4, 5      | 000-002  | 51.00 |
+	| productitems | vouchers         | total |
+	| 1, 2         | 000-001          | 60.15 |
+	| 3, 4, 5      | 000-002          | 51.00 |
+	| 3, 4         | 000-001, 000-004 | 41.00 |
 
 Scenario Outline: Shopping Basket gift voucher rejections
 	Given a shopping basket is created
@@ -39,3 +41,4 @@ Scenario Outline: Shopping Basket gift voucher rejections
 	| productitems | vouchers         | message                                                             | total |
 	| 3, 4         | 000-002          | There are no products in your basket applicable to voucher 000-002. | 51.00 |
 	| 3, 4         | 000-002, 000-003 | Another offer voucher has already been applied.                     | 51.00 |
+	| 3, 6         | 000-002, 000-003 | Another offer voucher has already been applied.                     | 51.00 |

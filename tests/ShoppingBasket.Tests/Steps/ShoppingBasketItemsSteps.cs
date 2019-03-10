@@ -48,6 +48,8 @@ namespace ShoppingBasket.Tests.Steps
 
             foreach (var offerVoucher in offerVouchers)
             {
+                if (string.IsNullOrWhiteSpace(offerVoucher.ProductType))
+                    offerVoucher.ProductType = null;
                 await PostJson("/api/items/offervoucher", offerVoucher);
             }
         }

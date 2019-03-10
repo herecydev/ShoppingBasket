@@ -80,19 +80,29 @@ namespace ShoppingBasket.Services
                     }
                     else
                     {
-                        var matchingCategory = categoryCosts.TryGetValue(offerVoucher.ProductType, out var categoryCost);
-                        if (offerVoucher.Threshold >= categoryCost)
+                        if (subTotal > offerVoucher.Threshold)
                         {
-                            discount += Math.Min(offerVoucher.Value, categoryCost);
-                        }
-                        else
-                        {
-                            itemResults.Add(new ItemResult
+                            if (offerVoucher.ProductType == null)
                             {
-                                Item = voucher,
-                                ItemResultAction = ItemResultAction.RejectItem,
-                                Message = $"There are no products in your basket applicable to voucher {voucher.Id}"
-                            });
+                                discount += offerVoucher.Value;
+                            }
+                            else
+                            {
+                                var matchingCategory = categoryCosts.TryGetValue(offerVoucher.ProductType, out var categoryCost);
+                                if (categoryCost > 0)
+                                {
+                                    discount += Math.Min(offerVoucher.Value, categoryCost);
+                                }
+                                else
+                                {
+                                    itemResults.Add(new ItemResult
+                                    {
+                                        Item = voucher,
+                                        ItemResultAction = ItemResultAction.RejectItem,
+                                        Message = $"There are no products in your basket applicable to voucher {voucher.Id}"
+                                    });
+                                }
+                            }
                         }
                     }
                 }
