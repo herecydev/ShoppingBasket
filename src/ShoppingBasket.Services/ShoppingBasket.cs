@@ -93,12 +93,14 @@ namespace ShoppingBasket.Services
                     {
                         if (discountableSubTotal > offerVoucher.Threshold)
                         {
+                            // If we don't have a specific product type to target we can discount
                             if (offerVoucher.ProductType == null)
                             {
                                 discount += offerVoucher.Value;
                             }
                             else
                             {
+                                // Check that we have at least something of the target product type
                                 var matchingCategory = discountableCosts.TryGetValue(offerVoucher.ProductType, out var categoryCost);
                                 if (categoryCost > 0)
                                 {

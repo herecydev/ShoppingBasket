@@ -21,6 +21,7 @@ namespace ShoppingBasket
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             var inMemoryBasketStoreOptions =  new InMemoryBasketStoreOptions();
             services.Configure<InMemoryBasketStoreOptions>(_configuration.GetSection("InMemoryBasketStore"));
+            services.Configure<InMemoryItemStoreOptions>(_configuration.GetSection("InMemoryItemStore"));
             services.AddShoppingBasketCore().AddInMemoryStore();
         }
 

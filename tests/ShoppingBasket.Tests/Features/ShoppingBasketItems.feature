@@ -14,9 +14,9 @@ Background:
 	| 000-001 | 5.00  |
 	And the following offer vouchers:
 	| Id      | Value | Threshold | ProductType |
-	| 000-002 | 5.00  | 50        | Headgear    |
-	| 000-003 | 5.00  | 5         | Headgear    |
-	| 000-004 | 5.00  | 50        |             |
+	| 000-002 | 5.00  | 50.00     | Headgear    |
+	| 000-003 | 5.00  | 5.00      | Headgear    |
+	| 000-004 | 5.00  | 50.00     |             |
 
 Scenario Outline: Shopping Basket gift voucher
 	Given a shopping basket is created

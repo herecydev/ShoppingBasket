@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using Microsoft.Extensions.Options;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
 namespace ShoppingBasket.Services
@@ -7,6 +8,24 @@ namespace ShoppingBasket.Services
     public class InMemoryItemStore : IItemStore
     {
         private ConcurrentDictionary<string, Item> _items = new ConcurrentDictionary<string, Item>();
+
+        public InMemoryItemStore(IOptions<InMemoryItemStoreOptions> options)
+        {
+            foreach (var item in options.Value.ProductItems)
+            {
+                _items.TryAdd(item.Id, item);
+            }
+
+            foreach (var item in options.Value.GiftVouchers)
+            {
+                _items.TryAdd(item.Id, item);
+            }
+
+            foreach (var item in options.Value.OfferVouchers)
+            {
+                _items.TryAdd(item.Id, item);
+            }
+        }
 
         public Task AddItemAsync(Item item)
         {
