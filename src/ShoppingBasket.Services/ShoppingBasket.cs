@@ -81,7 +81,7 @@ namespace ShoppingBasket.Services
                     else
                     {
                         var matchingCategory = categoryCosts.TryGetValue(offerVoucher.ProductType, out var categoryCost);
-                        if (offerVoucher.Theshold >= categoryCost)
+                        if (offerVoucher.Threshold >= categoryCost)
                         {
                             discount += Math.Min(offerVoucher.Value, categoryCost);
                         }

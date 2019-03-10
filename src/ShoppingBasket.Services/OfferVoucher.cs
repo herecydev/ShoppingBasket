@@ -2,7 +2,7 @@
 {
     public class OfferVoucher : Voucher
     {
-        public decimal Theshold { get; set; }
+        public decimal Threshold { get; set; }
         public string ProductType { get; set; }
     }
 }

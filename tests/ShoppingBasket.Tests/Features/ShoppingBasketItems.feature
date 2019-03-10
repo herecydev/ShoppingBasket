@@ -26,6 +26,7 @@ Scenario Outline: Shopping Basket gift voucher
 	Examples: 
 	| productitems | vouchers | total |
 	| 1, 2         | 000-001  | 60.15 |
+	| 3, 4, 5      | 000-002  | 51.00 |
 
 Scenario Outline: Shopping Basket gift voucher rejections
 	Given a shopping basket is created
