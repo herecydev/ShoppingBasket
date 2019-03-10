@@ -73,9 +73,9 @@ namespace ShoppingBasket.Services
                     {
                         itemResults.Add(new ItemResult
                         {
-                            Item = voucher,
+                            Id = voucher.Id,
                             ItemResultAction = ItemResultAction.RejectItem,
-                            Message = "Another offer voucher has already been applied"
+                            Message = "Another offer voucher has already been applied."
                         });
                     }
                     else
@@ -97,9 +97,9 @@ namespace ShoppingBasket.Services
                                 {
                                     itemResults.Add(new ItemResult
                                     {
-                                        Item = voucher,
+                                        Id = voucher.Id,
                                         ItemResultAction = ItemResultAction.RejectItem,
-                                        Message = $"There are no products in your basket applicable to voucher {voucher.Id}"
+                                        Message = $"There are no products in your basket applicable to voucher {voucher.Id}."
                                     });
                                 }
                             }
@@ -111,7 +111,8 @@ namespace ShoppingBasket.Services
 
             return new ShoppingBasketResult
             {
-                Total = total
+                Total = total,
+                ItemResults = itemResults
             };
         }
 

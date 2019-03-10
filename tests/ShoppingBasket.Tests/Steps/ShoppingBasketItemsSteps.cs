@@ -92,7 +92,7 @@ namespace ShoppingBasket.Tests.Steps
         {
             var shoppingBasketResult = _scenarioContext.Get<ShoppingBasketResult>("BasketResult");
             var messages = shoppingBasketResult.ItemResults.Select(x => x.Message);
-            message.Should().Contain(message);
+            messages.Should().Contain(message);
         }
     }
 }

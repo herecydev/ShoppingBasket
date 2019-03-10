@@ -190,6 +190,8 @@ this.FeatureBackground();
         [Xunit.TraitAttribute("Description", "Shopping Basket gift voucher rejections")]
         [Xunit.InlineDataAttribute("3, 4", "000-002", "There are no products in your basket applicable to voucher 000-002.", "51.00", new string[0])]
         [Xunit.InlineDataAttribute("3, 4", "000-002, 000-003", "Another offer voucher has already been applied.", "51.00", new string[0])]
+        [Xunit.InlineDataAttribute("3, 6", "000-002, 000-003", "You have not reached the spend threshold for voucher 000-004. Spend another £25.0" +
+            "1 to receive £5.00 discount from your basket total", "55.00", new string[0])]
         public virtual void ShoppingBasketGiftVoucherRejections(string productitems, string vouchers, string message, string total, string[] exampleTags)
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Shopping Basket gift voucher rejections", null, exampleTags);
