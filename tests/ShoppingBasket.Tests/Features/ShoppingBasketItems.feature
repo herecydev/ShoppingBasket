@@ -38,7 +38,7 @@ Scenario Outline: Shopping Basket gift voucher rejections
 	And the basket should have message '<message>'
 
 	Examples: 
-	| productitems | vouchers         | message                                                                                                                             | total |
-	| 3, 4         | 000-002          | There are no products in your basket applicable to voucher 000-002.                                                                 | 51.00 |
-	| 3, 4         | 000-002, 000-003 | Another offer voucher has already been applied.                                                                                     | 51.00 |
-	| 3, 6         | 000-002, 000-003 | You have not reached the spend threshold for voucher 000-004. Spend another £25.01 to receive £5.00 discount from your basket total | 55.00 |
+	| productitems | vouchers         | message                                                                                                                              | total |
+	| 3, 4         | 000-002          | There are no products in your basket applicable to voucher 000-002.                                                                  | 51.00 |
+	| 3, 4         | 000-002, 000-003 | Another offer voucher has already been applied.                                                                                      | 51.00 |
+	| 3, 6         | 000-004          | You have not reached the spend threshold for voucher 000-004. Spend another £25.01 to receive £5.00 discount from your basket total. | 55.00 |

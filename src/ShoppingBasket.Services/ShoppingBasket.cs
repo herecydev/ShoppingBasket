@@ -33,7 +33,8 @@ namespace ShoppingBasket.Services
 
         public ShoppingBasketResult Total()
         {
-            var categoryCosts = new Dictionary<string, decimal>();
+            var discountableCosts = new Dictionary<string, decimal>();
+            var nondiscountableCosts = 0M;
 
             // Calculate the subtotal of the standard product items first
             foreach (var item in _shoppingBasketItems.Where(x => x.ShoppingBasketItem is ProductItem))
@@ -41,19 +42,29 @@ namespace ShoppingBasket.Services
                 var productItem = item.ShoppingBasketItem as ProductItem;
                 if (item.ShoppingBasketOperationType == ShoppingBasketOperationType.Add)
                 {
-                    categoryCosts.TryGetValue(productItem.ProductType, out var categoryCost);
-                    categoryCost += item.ShoppingBasketItem.Value;
-                    categoryCosts[productItem.ProductType] = categoryCost;
+                    if (productItem.IsDiscountable)
+                    {
+                        discountableCosts.TryGetValue(productItem.ProductType, out var categoryCost);
+                        categoryCost += item.ShoppingBasketItem.Value;
+                        discountableCosts[productItem.ProductType] = categoryCost;
+                    }
+                    else
+                        nondiscountableCosts += productItem.Value;
                 }
                 else if (item.ShoppingBasketOperationType == ShoppingBasketOperationType.Remove)
                 {
-                    categoryCosts.TryGetValue(productItem.ProductType, out var categoryCost);
-                    categoryCost -= item.ShoppingBasketItem.Value;
-                    categoryCosts[productItem.ProductType] = categoryCost;
+                    if (productItem.IsDiscountable)
+                    {
+                        discountableCosts.TryGetValue(productItem.ProductType, out var categoryCost);
+                        categoryCost -= item.ShoppingBasketItem.Value;
+                        discountableCosts[productItem.ProductType] = categoryCost;
+                    }
+                    else
+                        nondiscountableCosts -= productItem.Value;
                 }
             }
 
-            var subTotal = categoryCosts.Sum(x => x.Value);
+            var discountableSubTotal = discountableCosts.Sum(x => x.Value);
             var discount = 0M;
             var offerVoucherCount = 0;
             var itemResults = new List<ItemResult>();
@@ -80,7 +91,7 @@ namespace ShoppingBasket.Services
                     }
                     else
                     {
-                        if (subTotal > offerVoucher.Threshold)
+                        if (discountableSubTotal > offerVoucher.Threshold)
                         {
                             if (offerVoucher.ProductType == null)
                             {
@@ -88,7 +99,7 @@ namespace ShoppingBasket.Services
                             }
                             else
                             {
-                                var matchingCategory = categoryCosts.TryGetValue(offerVoucher.ProductType, out var categoryCost);
+                                var matchingCategory = discountableCosts.TryGetValue(offerVoucher.ProductType, out var categoryCost);
                                 if (categoryCost > 0)
                                 {
                                     discount += Math.Min(offerVoucher.Value, categoryCost);
@@ -104,10 +115,19 @@ namespace ShoppingBasket.Services
                                 }
                             }
                         }
+                        else
+                        {
+                            itemResults.Add(new ItemResult
+                            {
+                                Id = voucher.Id,
+                                ItemResultAction = ItemResultAction.RejectItem,
+                                Message = $"You have not reached the spend threshold for voucher {voucher.Id}. Spend another £{offerVoucher.Threshold - discountableSubTotal + 0.01M} to receive £{offerVoucher.Value} discount from your basket total."
+                            });
+                        }
                     }
                 }
             }
-            var total = Math.Max(subTotal - discount, 0);
+            var total = Math.Max(discountableSubTotal + nondiscountableCosts - discount, 0);
 
             return new ShoppingBasketResult
             {
