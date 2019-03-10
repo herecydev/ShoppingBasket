@@ -7,6 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddShoppingBasketCore(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IShoppingBasketProvider, ShoppingBasketService>();
+            serviceCollection.AddSingleton<IItemService, ShoppingBasketService>();
             return serviceCollection;
         }
 
@@ -15,6 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
             serviceCollection.AddOptions();
             serviceCollection.AddMemoryCache();
             serviceCollection.AddSingleton<IShoppingBasketStore, InMemoryBasketStore>();
+            serviceCollection.AddSingleton<IItemStore, InMemoryItemStore>();
             return serviceCollection;
         }
     }

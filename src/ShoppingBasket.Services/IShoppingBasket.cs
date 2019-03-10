@@ -2,8 +2,8 @@
 {
     public interface IShoppingBasket
     {
-        void Add(ShoppingBasketItem shoppingBasketItem);
-        void Remove(ShoppingBasketItem shoppingBasketItem);
+        ItemResult Add(Item shoppingBasketItem);
+        ItemResult Remove(Item shoppingBasketItem);
         decimal Total();
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace ShoppingBasket.Services
 {
-    public class ProductItem : ShoppingBasketItem
+    public class ProductItem : Item
     {
         
     }
