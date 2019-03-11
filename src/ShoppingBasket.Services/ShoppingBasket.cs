@@ -72,7 +72,15 @@ namespace ShoppingBasket.Services
             // Roll through all the resulting vouchers
             foreach (var voucher in GetVouchers())
             {
-                if (voucher is GiftVoucher)
+                if (discount >= discountableSubTotal)
+                {
+                    itemRejections.Add(new ItemRejection
+                    {
+                        Id = voucher.Id,
+                        Message = "There is no more discountable cost in the basket."
+                    });
+                }
+                else if (voucher is GiftVoucher)
                 {
                     discount += voucher.Value;
                 }
@@ -126,7 +134,7 @@ namespace ShoppingBasket.Services
                     }
                 }
             }
-            var total = Math.Max(discountableSubTotal + nondiscountableCosts - discount, 0);
+            var total = Math.Max(Math.Max(discountableSubTotal - discount, 0) + nondiscountableCosts, 0);
 
             return new ShoppingBasketResult
             {

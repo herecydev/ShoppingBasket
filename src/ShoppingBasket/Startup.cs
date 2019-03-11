@@ -23,6 +23,29 @@ namespace ShoppingBasket
             services.Configure<InMemoryBasketStoreOptions>(_configuration.GetSection("InMemoryBasketStore"));
             services.Configure<InMemoryItemStoreOptions>(_configuration.GetSection("InMemoryItemStore"));
             services.AddShoppingBasketCore().AddInMemoryStore();
+
+            // Laying out a potential authorization policy for how we would authenticate and authorize the various parties
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ManageItems", policy =>
+                {
+                    policy.AddAuthenticationSchemes("AzureAD");
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("Team", "Operations");
+                });
+                options.AddPolicy("ViewBaskets", policy =>
+                {
+                    policy.AddAuthenticationSchemes("AzureAD");
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("Team", "Sales", "Marketing");
+                });
+                options.AddPolicy("ManageBasket", policy =>
+                {
+                    // We could use a client certificate or a shared secret to authenticate the POS
+                    policy.AddAuthenticationSchemes("ClientCertificate");
+                    policy.RequireAuthenticatedUser();
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

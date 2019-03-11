@@ -12,6 +12,8 @@ Background:
 	And the following gift vouchers:
 	| Id      | Value |
 	| 000-001 | 5.00  |
+	| 000-005 | 15.00  |
+	| 000-006 | 25.00  |
 	And the following offer vouchers:
 	| Id      | Value | Threshold | ProductType |
 	| 000-002 | 5.00  | 50.00     | Headgear    |
@@ -29,6 +31,7 @@ Scenario Outline: Shopping Basket gift voucher
 	| 1, 2         | 000-001          | 60.15 |
 	| 3, 4, 5      | 000-002          | 51.00 |
 	| 3, 4         | 000-001, 000-004 | 41.00 |
+	| 3, 4         | 000-001, 000-005 | 31.00 |
 
 Scenario Outline: Shopping Basket gift voucher rejections
 	Given a shopping basket is created
@@ -42,3 +45,4 @@ Scenario Outline: Shopping Basket gift voucher rejections
 	| 3, 4         | 000-002          | There are no products in your basket applicable to voucher 000-002.                                                                  | 51.00 |
 	| 3, 4         | 000-002, 000-003 | Another offer voucher has already been applied.                                                                                      | 51.00 |
 	| 3, 6         | 000-004          | You have not reached the spend threshold for voucher 000-004. Spend another £25.01 to receive £5.00 discount from your basket total. | 55.00 |
+	| 1, 6         | 000-005, 000-006 | There is no more discountable cost in the basket.                                                                                    | 30.00 |

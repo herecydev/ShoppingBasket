@@ -18,53 +18,101 @@ namespace ShoppingBasket.Services.Tests
           {
                 new object[] {
                     new List<ShoppingBasketOperation> {
-                        CreateBasketOperation("1", 10, ShoppingBasketOperationType.Add),
-                        CreateBasketOperation("2", 20, ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("1", 10), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("2", 20), ShoppingBasketOperationType.Add),
                     },
                     30
                 },
                 new object[] {
                     new List<ShoppingBasketOperation> {
-                        CreateBasketOperation("1", 4, ShoppingBasketOperationType.Add),
-                        CreateBasketOperation("2", 1, ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("1", 4), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("2", 1), ShoppingBasketOperationType.Add),
                     },
                     5
                 },
                 new object[] {
                     new List<ShoppingBasketOperation> {
-                        CreateBasketOperation("1", 8, ShoppingBasketOperationType.Add),
-                        CreateBasketOperation("2", 0, ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("1", 8), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("2", 0), ShoppingBasketOperationType.Add),
                     },
                     8
                 },
                 new object[] {
                     new List<ShoppingBasketOperation> {
-                        CreateBasketOperation("1", 8, ShoppingBasketOperationType.Add),
-                        CreateBasketOperation("1", 8, ShoppingBasketOperationType.Add),
-                        CreateBasketOperation("2", 10, ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("1", 8), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("1", 8), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("2", 10), ShoppingBasketOperationType.Add),
                     },
                     26
                 },
                 new object[] {
                     new List<ShoppingBasketOperation> {
-                        CreateBasketOperation("1", 10, ShoppingBasketOperationType.Add),
-                        CreateBasketOperation("1", 10, ShoppingBasketOperationType.Remove),
+                        CreateBasketOperation(CreateProductItem("1", 10), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("1", 10), ShoppingBasketOperationType.Remove),
                     },
                     0
                 },
                 new object[] {
                     new List<ShoppingBasketOperation> {
-                        CreateBasketOperation("1", 4, ShoppingBasketOperationType.Add),
-                        CreateBasketOperation("2", 1, ShoppingBasketOperationType.Add),
-                        CreateBasketOperation("1", 4, ShoppingBasketOperationType.Remove),
+                        CreateBasketOperation(CreateProductItem("1", 4), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("2", 1), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("1", 4), ShoppingBasketOperationType.Remove),
                     },
                     1
                 },
                 new object[] {
                     new List<ShoppingBasketOperation> {
-                        CreateBasketOperation("1", 8, ShoppingBasketOperationType.Add),
-                        CreateBasketOperation("2", 50, ShoppingBasketOperationType.Add),
-                        CreateBasketOperation("2", 50, ShoppingBasketOperationType.Remove),
+                        CreateBasketOperation(CreateProductItem("1", 8), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("2", 50), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("2", 50), ShoppingBasketOperationType.Remove),
+                    },
+                    8
+                },
+                new object[] {
+                    new List<ShoppingBasketOperation> {
+                        CreateBasketOperation(CreateProductItem("1", 8), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("2", 50), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateGiftVoucher("000-001", 50), ShoppingBasketOperationType.Add),
+                    },
+                    8
+                },
+                new object[] {
+                    new List<ShoppingBasketOperation> {
+                        CreateBasketOperation(CreateProductItem("1", 12), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("2", 50), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateGiftVoucher("000-001", 50), ShoppingBasketOperationType.Add),
+                    },
+                    12
+                },
+                new object[] {
+                    new List<ShoppingBasketOperation> {
+                        CreateBasketOperation(CreateProductItem("1", 8), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateNonDiscountableProductItem("2", 50), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateGiftVoucher("000-001", 50), ShoppingBasketOperationType.Add),
+                    },
+                    50
+                },
+                new object[] {
+                    new List<ShoppingBasketOperation> {
+                        CreateBasketOperation(CreateNonDiscountableProductItem("1", 8), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("2", 50), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateGiftVoucher("000-001", 50), ShoppingBasketOperationType.Add),
+                    },
+                    8
+                },
+                new object[] {
+                    new List<ShoppingBasketOperation> {
+                        CreateBasketOperation(CreateProductItem("1", 8), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("2", 50), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateOfferVoucher("000-002", 50, 60), ShoppingBasketOperationType.Add),
+                    },
+                    58
+                },
+                new object[] {
+                    new List<ShoppingBasketOperation> {
+                        CreateBasketOperation(CreateProductItem("1", 8), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateProductItem("2", 50), ShoppingBasketOperationType.Add),
+                        CreateBasketOperation(CreateOfferVoucher("000-002", 50, 50), ShoppingBasketOperationType.Add),
                     },
                     8
                 },
@@ -88,10 +136,34 @@ namespace ShoppingBasket.Services.Tests
                 ProductType = "Jeans"
             };
 
-        private static ShoppingBasketOperation CreateBasketOperation(string id, decimal value, ShoppingBasketOperationType basketOperationType)
+        private static ProductItem CreateNonDiscountableProductItem(string id, decimal value)
+            => new ProductItem
+            {
+                Id = id,
+                Value = value,
+                IsDiscountable = false,
+                ProductType = "Jeans"
+            };
+
+        private static GiftVoucher CreateGiftVoucher(string id, decimal value)
+            => new GiftVoucher
+            {
+                Id = id,
+                Value = value
+            };
+
+        private static OfferVoucher CreateOfferVoucher(string id, decimal value, decimal threshold)
+            => new OfferVoucher
+            {
+                Id = id,
+                Value = value,
+                Threshold = threshold
+            };
+
+        private static ShoppingBasketOperation CreateBasketOperation(Item item, ShoppingBasketOperationType basketOperationType)
             => new ShoppingBasketOperation
             {
-                ShoppingBasketItem = CreateProductItem(id, value),
+                ShoppingBasketItem = item,
                 ShoppingBasketOperationType = basketOperationType,
             };
 
