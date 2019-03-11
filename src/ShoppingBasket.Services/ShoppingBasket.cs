@@ -33,36 +33,8 @@ namespace ShoppingBasket.Services
 
         public ShoppingBasketResult Total()
         {
-            var discountableCosts = new Dictionary<string, decimal>();
-            var nondiscountableCosts = 0M;
-
             // Calculate the subtotal of the standard product items first
-            foreach (var item in _shoppingBasketItems.Where(x => x.ShoppingBasketItem is ProductItem))
-            {
-                var productItem = item.ShoppingBasketItem as ProductItem;
-                if (item.ShoppingBasketOperationType == ShoppingBasketOperationType.Add)
-                {
-                    if (productItem.IsDiscountable)
-                    {
-                        discountableCosts.TryGetValue(productItem.ProductType, out var categoryCost);
-                        categoryCost += item.ShoppingBasketItem.Value;
-                        discountableCosts[productItem.ProductType] = categoryCost;
-                    }
-                    else
-                        nondiscountableCosts += productItem.Value;
-                }
-                else if (item.ShoppingBasketOperationType == ShoppingBasketOperationType.Remove)
-                {
-                    if (productItem.IsDiscountable)
-                    {
-                        discountableCosts.TryGetValue(productItem.ProductType, out var categoryCost);
-                        categoryCost -= item.ShoppingBasketItem.Value;
-                        discountableCosts[productItem.ProductType] = categoryCost;
-                    }
-                    else
-                        nondiscountableCosts -= productItem.Value;
-                }
-            }
+            var (discountableCosts, nondiscountableCosts) = CalculateSubTotal();
 
             var discountableSubTotal = discountableCosts.Sum(x => x.Value);
             var discount = 0M;
@@ -141,6 +113,40 @@ namespace ShoppingBasket.Services
                 Total = total,
                 ItemRejections = itemRejections
             };
+        }
+
+        private (Dictionary<string, decimal> discountableCosts, decimal nonDiscountableCosts) CalculateSubTotal()
+        {
+            var discountableCosts = new Dictionary<string, decimal>();
+            var nonDiscountableCosts = 0M;
+            foreach (var item in _shoppingBasketItems.Where(x => x.ShoppingBasketItem is ProductItem))
+            {
+                var productItem = item.ShoppingBasketItem as ProductItem;
+                if (item.ShoppingBasketOperationType == ShoppingBasketOperationType.Add)
+                {
+                    if (productItem.IsDiscountable)
+                    {
+                        discountableCosts.TryGetValue(productItem.ProductType, out var categoryCost);
+                        categoryCost += item.ShoppingBasketItem.Value;
+                        discountableCosts[productItem.ProductType] = categoryCost;
+                    }
+                    else
+                        nonDiscountableCosts += productItem.Value;
+                }
+                else if (item.ShoppingBasketOperationType == ShoppingBasketOperationType.Remove)
+                {
+                    if (productItem.IsDiscountable)
+                    {
+                        discountableCosts.TryGetValue(productItem.ProductType, out var categoryCost);
+                        categoryCost -= item.ShoppingBasketItem.Value;
+                        discountableCosts[productItem.ProductType] = categoryCost;
+                    }
+                    else
+                        nonDiscountableCosts -= productItem.Value;
+                }
+            }
+
+            return (discountableCosts, nonDiscountableCosts);
         }
 
         private List<Voucher> GetVouchers()
